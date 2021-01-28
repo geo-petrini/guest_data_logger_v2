@@ -3,10 +3,9 @@ CREATE SCHEMA GuestDataLogger;
 USE GuestDataLogger;
 
 CREATE TABLE user(
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(25) PRIMARY KEY,
     nome VARCHAR(25),
     cognome VARCHAR(25),
-    username VARCHAR(25) NOT NULL,
     pass VARCHAR(25) NOT NULL,
     isAdmin TINYINT(1) DEFAULT 0
 );
@@ -16,7 +15,9 @@ CREATE TABLE stand(
     nome VARCHAR(25) NOT NULL,
     luogo VARCHAR(25) NOT NULL,
     data_inizio DATETIME NOT NULL,
-    data_fine DATETIME NOT NULL
+    data_fine DATETIME NOT NULL,
+    proprietario VARCHAR(25),
+    FOREIGN KEY(proprietario) REFERENCES user(username)
 );
 
 CREATE TABLE webcam(
