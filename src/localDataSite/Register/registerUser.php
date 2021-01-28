@@ -1,8 +1,6 @@
 <?php 
 	session_start(); 
     $route = include('./../Configuration/config.php');
-	$normalUsercredential = include('./../Configuration/normalUser.php');
-	$adminUserCredential = include('./../Configuration/adminUser.php');
     $username = $password = "";
 
 	function test_input($data) {

@@ -58,7 +58,7 @@
             }
         ?> 
         <?php
-            if(isset($_SESSION['admin'])){
+            if(isset($_SESSION['admin']) && $_SESSION['admin'] == TRUE){
         ?>
         
         <li class="list"><a class="alink" href="<?php echo $route?>/Administrator/">Data</a></li>
@@ -75,7 +75,7 @@
         <?php
             }else{
         ?>
-        <li id="login" class="list"><a class="alink" href="<?php echo $route?>/User/"><?php if(isset($_SESSION['admin'])){echo "Admin ";} echo $_SESSION['username'];?></a>
+        <li id="login" class="list"><a class="alink" href="<?php echo $route?>/User/"><?php if(isset($_SESSION['admin']) && $_SESSION['admin'] == TRUE){echo "Admin ";} echo $_SESSION['username'];?></a>
         <?php 
             }
         ?>
