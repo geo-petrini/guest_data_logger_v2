@@ -15,15 +15,15 @@
 	#Informazioni per la connessione.
 	$username = test_input($_POST["username"]);
 	$password = test_input($_POST["password"]);
-	$database = "ScanSpect";
-	$table = "user";
-    $host = "localhost";
+	$database = "guestdatalogger";
+	$table = "guestdatalogger.user";
+    $host = "localhost:3307";
     #Connessione al Database.
-    $mysqli = new mysqli($host, $normalUsercredential[0], $normalUsercredential[1], $database);
+    $mysqli = new mysqli($host, 'LoginUser', 'LoginAndRegister', $database);
     $_SESSION['loggedin'] = false;
 	if(!$mysqli->connect_errno){
-        $sql = "INSERT INTO user(username,password, admin) VALUES('$username','$password',null)";
-        if ($result = $mysqli->query($sql)) {
+        $sql = "INSERT INTO user(username, pass) VALUES('$username', '$password')";
+        if ($mysqli->query($sql)) {
             $_SESSION['loggedin'] = true;
             $_SESSION['username'] = $username;
             $_SESSION['password'] = $password;
