@@ -7,16 +7,15 @@ CREATE TABLE user(
     nome VARCHAR(25),
     cognome VARCHAR(25),
     username VARCHAR(25) NOT NULL,
-    pass VARCHAR(32) NOT NULL,
-    admin TINYINT(1) DEFAULT 0
+    isAdmin TINYINT(1) DEFAULT 0
 );
 
 CREATE TABLE stand(
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(25) NOT NULL,
     luogo VARCHAR(25) NOT NULL,
-    data_inizio TIMESTAMP NOT NULL,
-    data_fine TIMESTAMP NOT NULL
+    data_inizio DATETIME NOT NULL,
+    data_fine DATETIME NOT NULL
 );
 
 CREATE TABLE webcam(
