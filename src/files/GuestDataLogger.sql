@@ -35,3 +35,7 @@ CREATE TABLE chiave(
     FOREIGN KEY(stand_id) REFERENCES stand(id),
     FOREIGN KEY(webcam_id) REFERENCES webcam(id)
 );
+
+DROP USER IF EXISTS 'LoginUser'@'%';
+CREATE USER 'LoginUser'@'%' IDENTIFIED BY 'LoginAndRegister';
+GRANT SELECT, INSERT ON guestdatalogger.user TO 'LoginUser'@'%';
