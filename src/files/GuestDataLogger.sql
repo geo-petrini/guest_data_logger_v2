@@ -7,6 +7,7 @@ CREATE TABLE user(
     nome VARCHAR(25),
     cognome VARCHAR(25),
     pass VARCHAR(25) NOT NULL,
+    isOwner TINYINT(1) DEFAULT 0,
     isAdmin TINYINT(1) DEFAULT 0
 );
 
