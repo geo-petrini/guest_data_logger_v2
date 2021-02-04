@@ -43,3 +43,7 @@ CREATE TABLE chiave(
 DROP USER IF EXISTS 'LoginUser'@'%';
 CREATE USER 'LoginUser'@'%' IDENTIFIED BY 'LoginAndRegister';
 GRANT SELECT, INSERT, UPDATE, DELETE ON guestdatalogger.user TO 'LoginUser'@'%';
+
+DROP USER IF EXISTS 'StandUser'@'%';
+CREATE USER 'StandUser'@'%' IDENTIFIED BY 'Stand';
+GRANT SELECT, INSERT, UPDATE, DELETE ON guestdatalogger.stand TO 'StandUser'@'%';
