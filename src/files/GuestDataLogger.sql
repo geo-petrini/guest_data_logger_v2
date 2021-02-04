@@ -27,7 +27,7 @@ CREATE TABLE webcam(
 CREATE TABLE stat(
     id INT AUTO_INCREMENT PRIMARY KEY,
     data TIMESTAMP NOT NULL,
-    numero_persone INT NOT NULL
+    numero_persone INT NOT NULL,
     stand_id INT NOT NULL,
     FOREIGN KEY(stand_id) REFERENCES stand(id)
 );
