@@ -28,6 +28,7 @@ CREATE TABLE stat(
     data TIMESTAMP NOT NULL,
     numero_persone INT NOT NULL,
     stand_id INT NOT NULL,
+    num_webcam INT NOT NULL,
     FOREIGN KEY(stand_id) REFERENCES stand(id)
 	ON UPDATE CASCADE
         ON DELETE CASCADE
