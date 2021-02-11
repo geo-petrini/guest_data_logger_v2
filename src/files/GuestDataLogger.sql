@@ -38,11 +38,7 @@ CREATE TABLE chiave(
     chiave VARCHAR(48) PRIMARY KEY,
     stand_id INT NOT NULL,
     num_webcam INT NOT NULL,
-    proprietario VARCHAR(25) NOT NULL,
     FOREIGN KEY(stand_id) REFERENCES stand(id)
-	ON UPDATE CASCADE
-        ON DELETE CASCADE,
-    FOREIGN KEY(proprietario) REFERENCES stand(proprietario)
 	ON UPDATE CASCADE
         ON DELETE CASCADE
 );
