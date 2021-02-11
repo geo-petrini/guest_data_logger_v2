@@ -19,12 +19,8 @@ CREATE TABLE stand(
     data_fine DATETIME NOT NULL,
     proprietario VARCHAR(25),
     FOREIGN KEY(proprietario) REFERENCES user(username) 
-		ON UPDATE CASCADE
+	ON UPDATE CASCADE
         ON DELETE CASCADE
-);
-
-CREATE TABLE webcam(
-    id INT AUTO_INCREMENT PRIMARY KEY
 );
 
 CREATE TABLE stat(
@@ -33,21 +29,17 @@ CREATE TABLE stat(
     numero_persone INT NOT NULL,
     stand_id INT NOT NULL,
     FOREIGN KEY(stand_id) REFERENCES stand(id)
-		ON UPDATE CASCADE
+	ON UPDATE CASCADE
         ON DELETE CASCADE
 );
 
 CREATE TABLE chiave(
     chiave VARCHAR(48) PRIMARY KEY,
     stand_id INT NOT NULL,
-    webcam_id INT NOT NULL,
+    num_webcam INT NOT NULL,
     FOREIGN KEY(stand_id) REFERENCES stand(id)
-		ON UPDATE CASCADE
-        ON DELETE CASCADE,
-    FOREIGN KEY(webcam_id) REFERENCES webcam(id)
-		ON UPDATE CASCADE
+	ON UPDATE CASCADE
         ON DELETE CASCADE
-    
 );
 
 DROP USER IF EXISTS 'LoginUser'@'%';
