@@ -58,3 +58,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON guestdatalogger.stand TO 'StandUser'@'%'
 DROP USER IF EXISTS 'KeyUser'@'%';
 CREATE USER 'KeyUser'@'%' IDENTIFIED BY 'Key';
 GRANT SELECT, INSERT, UPDATE, DELETE ON guestdatalogger.chiave TO 'KeyUser'@'%';
+
+DROP USER IF EXISTS 'StatUser'@'%';
+CREATE USER 'StatUser'@'%' IDENTIFIED BY 'Stat';
+GRANT SELECT, INSERT, UPDATE, DELETE on guestdatalogger.stat TO 'StatUser'@'%';
