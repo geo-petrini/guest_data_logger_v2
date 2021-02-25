@@ -16,7 +16,7 @@
 |14:15 - 15:00 | Bralla: rework del sito per implementare una struttura mvc<br>Gnesa: rework del sito per implementare una struttura mvc<br>Nikolic & Agustoni:ottimizzazione della struttura del codice |
 |15:00 - 15:45 | Bralla: rework del sito per implementare una struttura mvc<br>Gnesa: rework del sito per implementare una struttura mvc<br>Nikolic & Agustoni: ottimizzazione della struttura del codice|
 ##  Problemi riscontrati e soluzioni adottate
-Nikolic & Agustoni: problemi nell'implementazione di tkinter -> conversione cv tkinter, soluzione-> consulenza con allievo del 4° anno (Nicholas Pigni)
+Nikolic & Agustoni: problemi nell'implementazione di tkinter nella conversione cv tkinter, soluzione-> consulenza con allievo del 4° anno (Nicholas Pigni)
 Tutti: problemi nella comunicazione tra client e server, il codice di risposta alla post request era inutilizzabile, soluzione cambiarlo.
 
 ##  Punto della situazione rispetto alla pianificazione
