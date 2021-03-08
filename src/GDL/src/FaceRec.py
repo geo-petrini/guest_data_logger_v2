@@ -7,12 +7,14 @@ import time
 import datetime
 #agiunto il deltatime : guestdatalogger
 from datetime import timedelta
+import tkinter as tk
 from tkinter import *
 from PIL import Image, ImageTk
 #aggiunto l'importazione del json : guestdatalogger
 import json
 #aggiunto l'importazione del request : guestdatalogger
 import requests
+import threading as thread
 
 #modifica dei parametri in entrata (api key) : guestdatalogger
 #Permette di iniziare la detection dei volti.
@@ -20,7 +22,6 @@ import requests
 #@param user user con cui connettersi.
 #@param passwd password dell'utente.
 def startFaceRecognition(api_key, capture=0):
-  
     #------------------------------Resize del frame-------------------------------
     
     #esegue un resizing del frame in base alla percentuale passata.
@@ -43,6 +44,7 @@ def startFaceRecognition(api_key, capture=0):
     def dataToJSON(date,number_face):
 
         #Inserimento dati nel Database
+        #url = 'http://localhost:8080/localDataSite/Scripts/insertStat.php'
         url = 'http://127.0.0.1'
         myJson = {
             "data":date,
@@ -79,75 +81,115 @@ def startFaceRecognition(api_key, capture=0):
                 cv.rectangle(frameOpencvDnn, (x1, y1), (x2, y2), (255, 0, 0), int(round(frameHeight/150)), 8)
         return frameOpencvDnn, bboxes
 
+    #Definisce nuovo frame.
+    top = Tk()
+    #setta le dimensioni del frame.
+    top.geometry("1000x660")
+    #setta il background bianco.
+    top.configure(background='white')
+    #aggiunge il titolo al frame.
+    top.wm_title("Guest Data Logger v2")
+    #setta a non ridimensionabile il frame.
+    top.resizable(width=False, height=False)
+    
     faceProto = "opencv_face_detector.pbtxt"
     faceModel = "opencv_face_detector_uint8.pb"
 
-    # Load network
-    faceNet = cv.dnn.readNet(faceModel, faceProto)
-
-    #cattura dello schermo
-    cap = cv.VideoCapture(capture)
-    padding = 20
-    last_face_number = None
-    count = 0
-    #aggiunto guestdataloggerv2
-    timeN = datetime.datetime.now()
-    timeF = datetime.datetime.now()
-    timeF += timedelta(seconds=10)
     
-    while cv.waitKey(1) < 0:
-        
-        face_number = 0 
+    def on_closing():
+        sys.exit()
 
-        if timeN<timeF:
+    def webcam():
+        label = tk.Label(top)
+        label.pack()
 
-            timeN = datetime.datetime.now()
-                
+        # Load network
+        faceNet = cv.dnn.readNet(faceModel, faceProto)
 
-            #prende il frame attuale della camera.
-            hasFrame, frame = cap.read()
-                
-            #ridimensione del frame del 200% con il metodo apposito.
-            frame = rescale_frame(frame,percent=200)
+        #cattura dello schermo
+        cap = cv.VideoCapture(capture)
+        padding = 20
+        last_face_number = None
+        count = 0
 
-            #se non individua frame, chiude.
-            if not hasFrame:
-                cv.waitKey()
-                break
-
-            #prende il numero di box/cornici create. Se non viene trovata nessuna, continua.
-            frameFace, bboxes = getFaceBox(faceNet, frame)  
-
-            #conteggio dei volti presenti nel frame.
-            for face in bboxes:
-                face_number+=1   
-
-            #print delle cornici su schermo. 
-            cv.imshow("Face detect", frameFace)
-                
-            #conteggio totale delle persone.
+        timeN = datetime.datetime.now()
+        timeF = datetime.datetime.now()
+        timeF += timedelta(seconds=10)
+        while cv.waitKey(1) < 0:
             
-            if last_face_number is not None:
-                if last_face_number < face_number:
-                    count+=1
+            face_number = 0 
+
+            # if cv.waitKey(delay=0):
+            #     cv.DestroyWindow("Live Video")
+
+            if timeN<timeF:
+
+                timeN = datetime.datetime.now()
+
+                #prende il frame attuale della camera.
+                hasFrame, frame = cap.read()
+                
+                #ridimensione del frame del 200% con il metodo apposito.
+                try:
+                    frame = rescale_frame(frame,percent=200)
+                except:
+                    print("2ppo")
+                
+                #prende il numero di box/cornici create. Se non viene trovata nessuna, continua.
+                frameFace, bboxes = getFaceBox(faceNet, frame)  
+
+                #conteggio dei volti presenti nel frame.
+                for face in bboxes:
+                    face_number+=1   
+
+                tkFrame1 = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+                tkFrame2 = cv.cvtColor(frameFace, cv.COLOR_BGR2RGB)
+                image1 = Image.fromarray(tkFrame1)
+                image2 = Image.fromarray(tkFrame2)
+                finalFrame1 =  ImageTk.PhotoImage(image1)
+                finalFrame2 =  ImageTk.PhotoImage(image2)
+                label.image = finalFrame1
+                label.configure(image = finalFrame1)
+                label.pack()
+                label.image = finalFrame2
+                label.configure(image = finalFrame2)
+                label.pack()
+                #se non individua frame, chiude.
+                if not hasFrame:
+                    cv.waitKey()
+                    break
+
+                #print delle cornici su schermo. 
+                #cv.imshow("Face detect", frameFace)
+                    
+                #conteggio totale delle persone.
+                
+                if last_face_number is not None:
+                    if last_face_number < face_number:
+                        count+=1
+                        last_face_number = face_number
+                        now = datetime.datetime.now()
+                else:
                     last_face_number = face_number
+                    count+=face_number
                     now = datetime.datetime.now()
+                print(str(count))
             else:
-                last_face_number = face_number
-                count+=face_number
-                now = datetime.datetime.now()
-            print(str(count))
-        else:
-            timeN = datetime.datetime.now()
-            dataToJSON(timeN.strftime("%d/%m/%Y, %H:%M:%S"), count)
-            #azzeremento del last_face_number
-            last_face_number = None
-            # #azzeramento count
-            count = 0
-            
-            timeF = datetime.datetime.now()
-            timeF += timedelta(seconds=10)
-            print(str(count))
+                timeN = datetime.datetime.now()
+                dataToJSON(timeN.strftime('%Y-%m-%d %H:%M:%S'), count)
+                #azzeremento del last_face_number
+                last_face_number = None
+                # #azzeramento count
+                count = 0
+                
+                timeF = datetime.datetime.now()
+                timeF += timedelta(seconds=10)
+                print(str(count))
+    
+    threadWeb = thread.Thread(target = webcam).start()
+    top.protocol("WM_DELETE_WINDOW", on_closing)
+    top.mainloop()
+
 
 
     #-----------------------------------------------------------------------------  
@@ -161,9 +203,15 @@ def startFaceRecognition(api_key, capture=0):
 #@param password Password dell'utente da testare.
 def testConnection(api_key):
     
+    #url = 'http://localhost:8080/localDataSite/Scripts/checkKey.php'
     url = 'http://127.0.0.1'
-    response = requests.post(url, data=api_key)
-    if response.status_code == 404:
+    #custom_header = {"api_key":api_key}
+    myJson = {
+            "api_key":api_key
+            }
+    response = requests.post(url, json=myJson)
+    print(response.status_code)
+    if response.status_code == 404: #386:
         return True
     else:
         return False
@@ -171,7 +219,7 @@ def testConnection(api_key):
 #-------------------------------- Menu Frame in Tkinter ---------------------------------------
 
     #/////////////////// Frame /////////////////
-
+#Quando viene partito.
 #Definisce nuovo frame.
 top = Tk()
 #setta le dimensioni del frame.
@@ -187,11 +235,11 @@ top.resizable(width=False, height=False)
 
 
 #//////////////// Logo /////////////////////
-# load = Image.open("n.png")
-# render = ImageTk.PhotoImage(load)
-# img = Label(top, image=render)
-# img.image = render
-# img.place(x=30,y=20)
+load = Image.open("n.png")
+render = ImageTk.PhotoImage(load)
+img = Label(top, image=render)
+img.image = render
+img.place(x=0,y=0)
 
 #///////////////////////////////////////////
 
@@ -207,7 +255,7 @@ L0.place(x=30,y=90)
 
 L1 = Label(top, text="Key")
 L1.place(x=30,y=120)
-E1 = Entry(top, bd =5)
+E1 = Entry(top, bd=5)
 E1.place(x=100,y=120)
 
 #///////////////////////////////////////////
