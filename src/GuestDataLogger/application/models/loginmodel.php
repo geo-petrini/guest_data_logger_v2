@@ -1,55 +1,52 @@
 <?php
+	include_once "databasemodel.php";
 	class LoginModel{
 
 		function checkLogin($username, $password) {
-			$mysqli = new mysqli(HOST, USERNAME, PASSWORD, DATABASE);
-			if(!$mysqli->connect_errno){
-				$query = "SELECT * from user WHERE username = '$username' AND pass = '$password'";
-				$result = $mysqli->query($query);
-				$result = $result->fetch_assoc();
-				if (is_array($result)) {
-					$_SESSION['loggedin'] = true;
-					$_SESSION['username'] = $username;
+			$query = "SELECT * from user WHERE username = '$username' AND pass = '$password'";
+			$result = DatabaseModel::executeSelectQuery($query);
+			if ($result != "MYSQL" && count($result) > 0) {
+				$result = $result[0];
 
-					if($result['isOwner'] == 1){
-						$_SESSION['owner'] = true;
-					}else{
-						$_SESSION['owner'] = false;
-					}
+				$_SESSION['loggedin'] = TRUE;
+				$_SESSION['username'] = $username;
 
-					if($result['isAdmin'] == 1){
-						$_SESSION['admin'] = true;
-					}else{
-						$_SESSION['admin'] = false;
-					}
-					return TRUE;
+				if($result['isOwner'] == 1){
+					$_SESSION['owner'] = TRUE;
+				}else{
+					$_SESSION['owner'] = false;
 				}
-				return FALSE;
+
+				if($result['isAdmin'] == 1){
+					$_SESSION['admin'] = TRUE;
+				}else{
+					$_SESSION['admin'] = FALSE;
+				}
+				$result = TRUE;
+			}else{
+				$result = FALSE;
 			}
-			return "MYSQL";
+			return $result;
 		}
 
 		function registerUser($username, $password){
-			$mysqli = new mysqli(HOST, USERNAME, PASSWORD, DATABASE);
-			if(!$mysqli->connect_errno){
-				if(strlen($username) < 25){
-					if(strlen($password) < 32){
-						$query = "INSERT INTO user(username, pass) VALUES('$username', '$password')";
-						if ($mysqli->query($query)) {
-							$_SESSION['loggedin'] = true;
-							$_SESSION['username'] = $username;
-							$_SESSION['owner'] = false;
-							$_SESSION['admin'] = false;
-							return TRUE;
-						}
-					}else{
-						return "PASS";
+			if(strlen($username) < 25){
+				if(strlen($password) < 32){
+					$query = "INSERT INTO user(username, pass) VALUES('$username', '$password')";
+					$result = DatabaseModel::executeQuery($query);
+					if ($result == TRUE) {
+						$_SESSION['loggedin'] = TRUE;
+						$_SESSION['username'] = $username;
+						$_SESSION['owner'] = FALSE;
+						$_SESSION['admin'] = FALSE;
 					}
 				}else{
-					return "USER";
+					$result = "PASS";
 				}
+			}else{
+				$result = "USER";
 			}
-			return "MYSQL";
+			return $result;
 		}
 		
 		function cleanInput($data) {

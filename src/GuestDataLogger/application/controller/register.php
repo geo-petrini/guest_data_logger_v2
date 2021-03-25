@@ -23,14 +23,13 @@ class Register
         if($result == TRUE){
             header('Location:'.URL.'home');
         }else if($result == "USER"){
-            require 'application/views/shared/errorHeader.php';
-            require 'application/views/register/usernameError.php';
+            header('Location:'.URL.'errors/registerError/usernameError');
         }else if($result == "PASS"){
-            require 'application/views/shared/errorHeader.php';
-            require 'application/views/register/passwordError.php';
+            header('Location:'.URL.'errors/registerError/passwordError');
         }else if($result == "MYSQL"){
-            require 'application/views/shared/errorHeader.php';
-            require 'application/views/shared/databaseError.php';
+            header('Location:'.URL.'errors/databaseError');
+        }else{
+            header('Location:'.URL.'errors/registerError/usernameTakenError');
         }
     }else{
         header('Location:'.URL.'home');

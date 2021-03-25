@@ -1,11 +1,37 @@
+* {
+    box-sizing: border-box;
+}
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+html,
 body {
-	margin: 0;
-	padding: 0;
-	line-height: 1.5em;
-	font-family: arial;
-	font-size: 12px;
-	color: #666;
-	background: #ffffff;
+    height: 100%;
+    position: relative;
+}
+
+.main-container {
+    min-height: 100vh; /* will cover the 100% of viewport */
+    overflow: hidden;
+    display: block;
+    position: relative;
+    padding-bottom: 100px; /* height of your footer */
+}
+
+body{
+    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size:14px;
+    line-height:1.42857143;
+    color:#333;
+    background-color:#fff;
 }
 
 #ulist {
@@ -28,11 +54,24 @@ body {
     text-decoration: none;
 }
 
+.contentTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right:auto;
+    max-width: 100%;
+    white-space:nowrap;
+}
+
 .list .alink:hover {
     background-color: #4CAF50;
 }
 #login {
     float: right;
+}
+
+h1{
+    text-align: center;
 }
 
 button {
@@ -64,7 +103,7 @@ img.avatar {
 
 .container {
     padding: 16px;
-    text-align: center;
+    display: block;
 }
 
 ul {
@@ -99,14 +138,11 @@ input[type=text], input[type=password] {
     box-sizing: border-box;
 }
 
-table {
-    border-collapse: collapse;
-    width: 100%;
-}
-
 th, td {
-    padding: 8px;
-    text-align: left;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+    width: fit-content;
     border-bottom: 1px solid #ddd;
 }
 

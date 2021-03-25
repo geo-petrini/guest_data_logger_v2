@@ -23,11 +23,9 @@ class Login
         if($result == TRUE){
             header('Location:'.URL.'home');
         }else if($result == FALSE){
-            require 'application/views/shared/errorHeader.php';
-            require 'application/views/login/loginError.php';
+            header('Location:'.URL.'errors/loginError');
         }else if($result == "MYSQL"){
-            require 'application/views/shared/errorHeader.php';
-            require 'application/views/shared/databaseError.php';
+            header('Location:'.URL.'errors/databaseError');
         }
     }else{
         header('Location:'.URL.'home');
