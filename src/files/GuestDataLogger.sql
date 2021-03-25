@@ -1,8 +1,4 @@
-DROP SCHEMA IF EXISTS GuestDataLogger;
-CREATE SCHEMA GuestDataLogger;
-USE GuestDataLogger;
-
-CREATE TABLE user(
+CREATE TABLE utente(
     username VARCHAR(25) PRIMARY KEY,
     nome VARCHAR(25),
     cognome VARCHAR(25),
@@ -43,20 +39,3 @@ CREATE TABLE chiave(
 	ON UPDATE CASCADE
         ON DELETE CASCADE
 );
-
-DROP USER IF EXISTS 'LoginUser'@'%';
-CREATE USER 'LoginUser'@'%' IDENTIFIED BY 'LoginAndRegister';
-GRANT SELECT, INSERT, UPDATE, DELETE ON guestdatalogger.user TO 'LoginUser'@'%';
-
-DROP USER IF EXISTS 'StandUser'@'%';
-CREATE USER 'StandUser'@'%' IDENTIFIED BY 'Stand';
-GRANT SELECT, INSERT, UPDATE, DELETE ON guestdatalogger.stand TO 'StandUser'@'%';
-
-DROP USER IF EXISTS 'KeyUser'@'%';
-CREATE USER 'KeyUser'@'%' IDENTIFIED BY 'Key';
-GRANT SELECT, INSERT, UPDATE, DELETE ON guestdatalogger.chiave TO 'KeyUser'@'%';
-GRANT SELECT, INSERT, UPDATE, DELETE ON guestdatalogger.stand TO 'KeyUser'@'%';
-
-DROP USER IF EXISTS 'StatUser'@'%';
-CREATE USER 'StatUser'@'%' IDENTIFIED BY 'Stat';
-GRANT SELECT, INSERT, UPDATE, DELETE on guestdatalogger.stat TO 'StatUser'@'%';
