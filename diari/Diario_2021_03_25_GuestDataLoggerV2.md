@@ -13,8 +13,8 @@
 |10:50 - 11:35 | Bralla: rework del sito<br>Gnesa: rework del sito<br> Nikolic & Agustoni: gestione chiusura applicativo|
 |12:30 - 13:15 | Bralla: rework del sito<br>Gnesa: rework del sito<br> Nikolic & Agustoni: creazione dell'applicativo eseguibile per testarlo|
 |13:15 - 14:00 | Bralla: rework del sito<br>Gnesa: rework del sito<br> Nikolic & Agustoni: controllo webcam|
-|14:15 - 15:00 | Bralla: rework del sito<br>Gnesa: rework del sito<br> Nikolic & Agustoni: test con il server|
-|15:00 - 15:45 | Bralla: rework del sito<br>Gnesa: rework del sito<br> Nikolic & Agustoni: test con il server|
+|14:15 - 15:00 | Bralla: test comunicazione client-server<br>Gnesa: test comunicazione client-server<br> Nikolic & Agustoni: test comunicazione client-server|
+|15:00 - 15:45 | Bralla: test comunicazione client-server<br>Gnesa: test comunicazione client-server<br> Nikolic & Agustoni: test comunicazione client-server|
 
 ##  Problemi riscontrati e soluzioni adottate
 Nikolic & Agustoni: problema nella creazione del file eseguibile, non risolto.
