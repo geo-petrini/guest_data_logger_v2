@@ -15,7 +15,7 @@ CREATE TABLE stand(
     data_fine DATETIME NOT NULL,
     proprietario VARCHAR(25) NOT NULL,
     isPublic TINYINT(1) DEFAULT 0,
-    FOREIGN KEY(proprietario) REFERENCES user(username) 
+    FOREIGN KEY(proprietario) REFERENCES utente(username) 
 	ON UPDATE CASCADE
         ON DELETE CASCADE
 );
