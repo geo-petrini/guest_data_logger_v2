@@ -12,7 +12,7 @@
 |10:05 - 10:50 | Bralla: documentazione<br>Nikolic & Gnesa: gestione chiusura applicativo|
 |10:50 - 11:35 | Bralla: sistemazione bug sito<br>Nikolic & Gnesa: gestione chiusura applicativo|
 |12:30 - 13:15 | Bralla: sistemazione bug sito<br>Nikolic & Gnesa: gestione connessione tra software e server|
-|13:15 - 14:00 | Bralla: aggiunte al sito<br>Gnesa: rework del sito<br> Nikolic & Gnesa: gestione connessione tra software e server|
+|13:15 - 14:00 | Bralla: aggiunte al sito<br>Nikolic & Gnesa: gestione connessione tra software e server|
 |14:15 - 15:00 | Bralla: aggiunte al sito<br>Nikolic & Gnesa: gestione connessione tra software e server|
 |15:00 - 15:45 | Bralla: aggiunte al sito<br>Nikolic & Gnesa: gestione connessione tra software e server|
 
