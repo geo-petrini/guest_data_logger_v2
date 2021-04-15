@@ -1,3 +1,6 @@
+CREATE DATABASE guestdatalogger;
+USE guestdatalogger;
+
 CREATE TABLE utente(
     username VARCHAR(25) PRIMARY KEY,
     nome VARCHAR(25),
