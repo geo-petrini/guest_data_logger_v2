@@ -2,7 +2,7 @@ CREATE TABLE utente(
     username VARCHAR(25) PRIMARY KEY,
     nome VARCHAR(25),
     cognome VARCHAR(25),
-    pass VARCHAR(25) NOT NULL,
+    pass VARCHAR(255) NOT NULL,
     isOwner TINYINT(1) DEFAULT 0,
     isAdmin TINYINT(1) DEFAULT 0
 );
