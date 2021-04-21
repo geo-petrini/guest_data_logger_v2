@@ -3,6 +3,8 @@ from tkinter import *
 from PIL import Image, ImageTk
 import requests
 import cv2 as cv
+import keyboard
+import threading as thread
 
 class StartWindow():
 
@@ -10,6 +12,7 @@ class StartWindow():
     def __init__(self, q):
         self.q = q
         self._build_frame()
+        self.main_frame.protocol("WM_DELETE_WINDOW", self.on_closing)
         self._build_logo()
         self._build_help()
         self._build_key_input()
@@ -69,6 +72,9 @@ class StartWindow():
         L0.config(font=("Courier",8))
         L0.place(x=30,y=90)
 
+    #////////////////////////////////////////////////////
+    def on_closing(self):
+        sys.exit()
 
     #////////// Istanzia la key entry ///////////
     def _build_key_input(self):
@@ -77,17 +83,19 @@ class StartWindow():
         self.e1 = Entry(self.main_frame, bd=5)
         self.e1.place(x=100,y=120)
 
+    
+
     #/////////////////// Testa la connessione con il server ////////////////////////
     def testConnection(self, api_key):
-        #url = 'http://localhost:8080/localDataSite/Scripts/checkKey.php'
-        url = 'http://127.0.0.1'
+        url = 'http://127.0.0.1:8080/GuestDataLogger/scripts/checkKey.php'
+        #url = 'http://127.0.0.1'
         #custom_header = {"api_key":api_key}
         myJson = {
                 "api_key":api_key
                 }
         response = requests.post(url, json=myJson)
         print(response.status_code)
-        if response.status_code == 404: #386:
+        if response.status_code == 200: #404: 
             return True
         else:
             return False
@@ -100,6 +108,7 @@ class StartWindow():
         api_key = self.e1.get()
 
         L4 = Label()
+
         if L4.winfo_exists():
             L4.destroy()
 
@@ -109,13 +118,16 @@ class StartWindow():
             L4.place(x=30,y=350)  
             
         else:
-            if self.testConnection(api_key) is True:
-                self.q.put( {'api_key':api_key} )
-                self.main_frame.destroy()
-                
-                    
+            if self.returnCameraIndexes() != ["None"]:
+                if self.testConnection(api_key) is True:
+                    self.q.put( {'api_key':api_key} )
+                    self.main_frame.destroy()
+                else:
+                    L4 = Label(self.main_frame, text="API Key invalid, try again.")
+                    L4.config(fg="red")
+                    L4.place(x=30,y=350)
             else:
-                L4 = Label(self.main_frame, text="API Key invalid, try again.")
+                L4 = Label(self.main_frame, text="Nessuna webcam rilevata!")
                 L4.config(fg="red")
                 L4.place(x=30,y=350)
 

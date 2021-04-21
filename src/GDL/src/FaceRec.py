@@ -219,7 +219,8 @@ def testConnection(api_key):
 #-------------------------------- Menu Frame in Tkinter ---------------------------------------
 
     #/////////////////// Frame /////////////////
-#Quando viene partito.
+#Quando viene partito bisogna ribattare.
+
 #Definisce nuovo frame.
 top = Tk()
 #setta le dimensioni del frame.

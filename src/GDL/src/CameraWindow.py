@@ -7,11 +7,14 @@ import cv2 as cv
 import time
 import datetime
 from datetime import timedelta
-        
+import sys
+
 class CameraWindow():
 
-    def __init__(self, q):
+    def __init__(self, q, ex):
         self.q = q
+        self.ex = ex
+        self.runstate = True
         self.faceProto = "opencv_face_detector.pbtxt"
         self.faceModel = "opencv_face_detector_uint8.pb"
         self._build_frame()
@@ -19,7 +22,6 @@ class CameraWindow():
         self.startFaceRecognition()
         self.top.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.top.mainloop()
-        self.SetDoubleBuffered(True)
     
     # Istanzia il frame che conterrà la webcam
     def _build_frame(self):
@@ -35,11 +37,18 @@ class CameraWindow():
         self.top.resizable(width=False, height=False)
 
     def on_closing(self):
-            sys.exit()
+        self.ex.put({'exit':True})
+        self.runstate = False
+        print(f'setting runstate = {self.runstate}')
+        #self.top.destroy()
 
     def _build_label(self):
-        self.label = tk.Label(self.top)
+        self.label = tk.Label(self.top, height=675, width=1290)
         self.label.pack()
+        self.labelInfo = tk.Label(self.top, text="Conteggio: 0", font=('Helvetica', 12), fg='blue')
+        self.labelInfo.pack()
+        self.label.place(x=0,y=25)
+        self.labelInfo.place(x=0,y=0)
 
     #modifica dei parametri in entrata (api key) : guestdatalogger
     #Permette di iniziare la detection dei volti.
@@ -48,7 +57,11 @@ class CameraWindow():
     #@param passwd password dell'utente.
     def startFaceRecognition(self, capture=0):
        
-        threadWeb = thread.Thread(target = lambda : self.webcam(capture)).start()
+        self.threadWeb = thread.Thread(target = lambda : self.webcam(capture))
+        print(self.threadWeb)
+        self.threadWeb.start()
+        #if self.threadWeb.is_alive():
+        #    print('self.threadWeb is alive')
 
     def webcam(self, capture):
         
@@ -56,7 +69,7 @@ class CameraWindow():
         faceNet = cv.dnn.readNet(self.faceModel, self.faceProto)
 
         #cattura dello schermo
-        cap = cv.VideoCapture(capture)
+        cap = cv.VideoCapture(capture, cv.CAP_DSHOW)
         padding = 20
         last_face_number = None
         count = 0
@@ -64,8 +77,9 @@ class CameraWindow():
         timeN = datetime.datetime.now()
         timeF = datetime.datetime.now()
         timeF += timedelta(seconds=10)
-        while cv.waitKey(1) < 0:
-            
+        #cv.waitKey(1) < 0 and
+        while cv.waitKey(1) < 0 and self.runstate:
+            #print(self.runstate)
             face_number = 0 
 
             # if cv.waitKey(delay=0):
@@ -80,7 +94,7 @@ class CameraWindow():
                 
                 #ridimensione del frame del 200% con il metodo apposito.
                 try:
-                    frame = self.rescale_frame(frame,percent=300)
+                    frame = self.rescale_frame(frame,percent=200)
                 except:
                     print("2ppo")
                 
@@ -90,20 +104,17 @@ class CameraWindow():
 
                 #conteggio dei volti presenti nel frame.
                 for face in bboxes:
-                    face_number+=1   
+                    face_number+=1
 
-                tkFrame1 = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
-                tkFrame2 = cv.cvtColor(frameFace, cv.COLOR_BGR2RGB)
-                image1 = Image.fromarray(tkFrame1)
-                image2 = Image.fromarray(tkFrame2)
-                finalFrame1 =  ImageTk.PhotoImage(image1)
-                finalFrame2 =  ImageTk.PhotoImage(image2)
-                #self.label.image = finalFrame1
-                #self.label.configure(image = finalFrame1)
-                #self.label.pack()
-                self.label.image = finalFrame2
-                self.label.configure(image = finalFrame2)
-                self.label.pack()
+                tkFrame = cv.cvtColor(frameFace, cv.COLOR_BGR2RGB)
+                image = Image.fromarray(tkFrame)
+                finalFrame =  ImageTk.PhotoImage(image)
+                if self.runstate == False:
+                    print("exiting while loop")
+                    break
+                    
+                self.label.configure(image = finalFrame)
+                self.label.image = finalFrame
                 #se non individua frame, chiude.
                 if not hasFrame:
                     cv.waitKey()
@@ -124,6 +135,10 @@ class CameraWindow():
                     count+=face_number
                     now = datetime.datetime.now()
                 print(str(count))
+                if(count > 1 or count == 0):
+                    self.labelInfo.configure(text = "Conteggio: " + str(count) + " persone")
+                else:
+                    self.labelInfo.configure(text = "Conteggio: " + str(count) + " persona")
             else:
                 timeN = datetime.datetime.now()
                 #dataToJSON(timeN.strftime('%Y-%m-%d %H:%M:%S'), count, api_key)
@@ -135,6 +150,12 @@ class CameraWindow():
                 timeF = datetime.datetime.now()
                 timeF += timedelta(seconds=10)
                 print(str(count))
+
+        print('end while - exiting webcam procedure')
+        #TODO clean close cv
+        cv.destroyAllWindows()
+        self.top.destroy()
+        
 
     #------------------------------ Scansione volti ------------------------------    
 

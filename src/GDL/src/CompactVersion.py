@@ -1,18 +1,15 @@
-# Import required modules
+
 import cv2 as cv
 import math
 import argparse
 import os 
 import time
 import datetime
-#agiunto il deltatime : guestdatalogger
 from datetime import timedelta
 import tkinter as tk
 from tkinter import *
 from PIL import Image, ImageTk
-#aggiunto l'importazione del json : guestdatalogger
 import json
-#aggiunto l'importazione del request : guestdatalogger
 import requests
 import threading as thread
 import multiprocessing
@@ -25,9 +22,6 @@ proxies = {
  'http': 'http://10.20.4.118:8888',
  'https': 'http://10.20.4.118:8888'
 }
-
-
-#il metodo get() della classe Queue, di default ha un parametro block settato a true che blocca il flusso del programma fino a quando la coda si riempie.
 
 class SenderData (thread.Thread):
     def __init__(self, q, api_key, ex):
@@ -50,20 +44,23 @@ class SenderData (thread.Thread):
             condizione = self.checkEx()
         timeF = datetime.datetime.now()
         print("Fuori dal run")
-        #sys.exit()
         return
     
     def join (self, timeout = None):
         self._stopevent.set()
 
     def checkEx(self):
-        if(self.ex.get(False)['exit']):
-            print("exit now")
-            return False
-        else:
-            print("FALSE exit")
-            self.ex.put({'exit': False})
-            return True
+        try:
+            if(self.ex.get(False)['exit']):
+                print("exit now")
+                return False
+            else:
+                print("FALSE exit")
+                self.ex.put({'exit': False})
+                return True
+        except Exception as e:
+            pass
+
     
     #Permette l'aggiunta di dati al database
     #@param date Data corrente nel formato mm-dd-YY
@@ -71,7 +68,6 @@ class SenderData (thread.Thread):
     #@param minutes Minuti attuali.
     #@param secs Secondi attuali.
     def dataToJSON(self):
-        #try:
         v = self.q.get(True, 11)
         print(v)
         myJson = {
@@ -81,8 +77,6 @@ class SenderData (thread.Thread):
             }
         print(myJson)
         return myJson
-        #except:
-        #    print("dataToJSON: exception")
 
     #-----------------------------------------------------------------------------   
 
@@ -98,7 +92,6 @@ class SenderData (thread.Thread):
 
     def send_data(self):
         url = 'http://samtinfo.ch/gdl/scripts/insertStat.php'
-        #url = 'http://127.0.0.1'
         req = requests.post(url, json= self.dataToJSON(), proxies=proxies)
         s = req.text
         print(f'request text; {s}')
@@ -143,7 +136,7 @@ class StartWindow():
     #//////////////// Istanzia l'option menu /////////////////////
     def _build_option_menu(self):
         variable = tk.StringVar(self.main_frame)
-        optionList = self.returnCameraIndexes() #ti da la lista tutta
+        optionList = self.returnCameraIndexes()
         variable.set("Seleziona la webcam")
         opt = tk.OptionMenu(self.main_frame, variable, *optionList)
         opt.config(width=23, font=('Helvetica', 10))
@@ -191,8 +184,6 @@ class StartWindow():
     def testConnection(self, api_key):
         
         url = 'http://samtinfo.ch/gdl/scripts/checkKey.php'
-        #url = 'http://127.0.0.1'
-        #custom_header = {"api_key":api_key}
         myJson = {
                 "api_key":api_key
                 }
@@ -341,10 +332,8 @@ class Capture(thread.Thread):
 
         timeN = datetime.datetime.now() #current time
         timeF = datetime.datetime.now() + timedelta(seconds=10) #time to send data
-        #cv.waitKey(1) < 0 and
         while cv.waitKey(1) < 0 and self.runstate:
 
-            #print(self.runstate)
             face_number = 0 
             detected = self.detectFaces(cap)
 
@@ -361,40 +350,32 @@ class Capture(thread.Thread):
            
             if not detected['error']:
                 logging.debug("adding data to frames queue")
-                self.frames_queue.put( detected )
-                #self.update_picture( cv.cvtColor(detected['frame'], cv.COLOR_BGR2RGB) )
-                #self.update_counter(count)              
+                self.frames_queue.put( detected )             
             timeN = datetime.datetime.now()
 
             if timeN >= timeF:
-                #dataToJSON(timeN.strftime('%Y-%m-%d %H:%M:%S'), count, api_key)
                 self.q.put( {'time':timeN.strftime('%Y-%m-%d %H:%M:%S'), 'count':count} )
                 #azzeremento del last_face_number
                 last_face_number = None
                 # #azzeramento count
                 count = 0
                 timeF = datetime.datetime.now() + timedelta(seconds=10)
-
         
-        #TODO clean close cv
         cv.destroyAllWindows()
-        self.frames_queue.put('quit')
         logging.info('end while - exiting webcam procedure')
         print('end while - exiting webcam procedure')
 
 
 
 class CameraWindowN():
-    def __init__(self, frames_queue, webcam_port=0, ex=None):
+    def __init__(self, ex=None, frames_queue=None):
         self.frames_queue = frames_queue
         self.ex = ex
-        self.runstate = True
         self.faceProto = "opencv_face_detector.pbtxt"
         self.faceModel = "opencv_face_detector_uint8.pb"
         self._build_frame()
         self._build_label()
-        #self.startFaceRecognition(webcam_port)
-        self.capture = webcam_port
+        self.stop_event = thread.Event()
         self.rth = None
            
 
@@ -410,7 +391,8 @@ class CameraWindowN():
         self.top.wm_title("Guest Data Logger v2")
         #setta a non ridimensionabile il frame.        
         self.top.resizable(width=False, height=False)
-        self.top.protocol("WM_DELETE_WINDOW", self.on_closing)
+        self.top.protocol("WM_DELETE_WINDOW", self.on_close )
+        self.top.bind('<Escape>', self.on_close )
 
     def _build_label(self):
         self.label = tk.Label(self.top, height=675, width=1290)
@@ -432,54 +414,44 @@ class CameraWindowN():
         else:
             self.labelInfo.configure(text = "Conteggio: " + str(count) + " persona")
 
-    def on_closing(self):
+    def on_close(self):
         self.ex.put({'exit':True})
-        self.runstate = False
-        logging.info(f'setting runstate = {self.runstate}')
-        print(f'setting runstate = {self.runstate}')
-        
+
+        self.stop_event.set()
+        print(f'stop event: {self.stop_event.is_set()}')
+        time.sleep(1)
         self.top.destroy()
-        self.frames_queue.put('quit')
-        
-        #TODO check if self.rth is to be closed somehow
 
-        #while self.rth.is_alive():
-        #    print('rth alive')
-        #    time.sleep(0.1)
-        
-
-    def _refresh(self, data_queue):
+    def _refresh(self, data_queue, stop_event):
         logging.debug('frame refresh started')
-        while self.runstate:
+        exit_event = False
+        while not exit_event:
             try:
                 data = data_queue.get(False)    #get non blocking
             except Exception as e:
                 data = None   #capture exception in case of Empty get from queue
             #logging.debug(f'data_queue value: {data}')
-            #print(f'data_queue value: {data}')
             if data:
-                if data == 'quit':
-                    print('---------------------------------------------')
-                    self.runstate = False
-                else: 
-                    #logging.debug('refreshing data')
-                    try:
-                        self.update_picture(data['frame'])
-                    except Exception as e:
-                        logging.exception('error updating frame')
+                #logging.debug('refreshing data')
+                try:
+                    self.update_picture(data['frame'])
+                except Exception as e:
+                    logging.exception('error updating frame')
 
-                    try:
-                        self.update_counter(data['count'])
-                    except Exception as e:
-                        logging.exception('error updating count')                    
-                
-            #time.sleep(0.01)
+                try:
+                    self.update_counter(data['count'])
+                except Exception as e:
+                    logging.exception('error updating count')    
+
+            exit_event=stop_event.is_set()
+
         logging.debug('frame refresh ended')
         print('frame refresh ended')
 
     def run(self):
         logging.debug("starting frames refresh thread")
-        self.rth = thread.Thread(target=self._refresh, args=[self.frames_queue])
+        self.rth = thread.Thread(target=self._refresh, args=[self.frames_queue, self.stop_event])
+        self.rth.daemon = True
         self.rth.start()
         logging.debug("starting tk mainloop")
         self.top.mainloop() 
@@ -491,14 +463,11 @@ class CameraWindow(thread.Thread):
         self.q = q
         self.ex = ex
         self.runstate = True
+        self.capture = webcam_port
         self.faceProto = "opencv_face_detector.pbtxt"
         self.faceModel = "opencv_face_detector_uint8.pb"
         self._build_frame()
         self._build_label()
-        #self.startFaceRecognition(webcam_port)
-        self.capture = webcam_port
-
-
         self.top.mainloop()
     
     # Istanzia il frame che conterrà la webcam
@@ -519,8 +488,6 @@ class CameraWindow(thread.Thread):
         self.ex.put({'exit':True})
         self.runstate = False
         print(f'setting runstate = {self.runstate}')
-        #self.threadweb._stop_event.set()
-        #self.top.destroy()
 
     def _build_label(self):
         self.label = tk.Label(self.top, height=675, width=1290)
@@ -556,13 +523,8 @@ class CameraWindow(thread.Thread):
         timeN = datetime.datetime.now()
         timeF = datetime.datetime.now()
         timeF += timedelta(seconds=10)
-        #cv.waitKey(1) < 0 and
         while cv.waitKey(1) < 0 and self.runstate:
-            #print(self.runstate)
             face_number = 0 
-
-            # if cv.waitKey(delay=0):
-            #     cv.DestroyWindow("Live Video")
 
             if timeN < timeF:
 
@@ -588,31 +550,14 @@ class CameraWindow(thread.Thread):
                 for face in bboxes:
                     face_number+=1
 
-                
-                '''
-                tkFrame = cv.cvtColor(frameFace, cv.COLOR_BGR2RGB)
-                image = Image.fromarray(tkFrame)
-                finalFrame =  ImageTk.PhotoImage(image)
-                if self.runstate == False:
-                    print("exiting while loop")
-                    break
-                    
-                self.label.configure(image = finalFrame)
-                self.label.image = finalFrame
-                '''
-
-                #print delle cornici su schermo. 
-                #cv.imshow("Face detect", frameFace)
-                    
                 #conteggio totale delle persone.
                 
                 if last_face_number:
                     if last_face_number < face_number:
                         last_face_number = face_number
-                        count += 1  #TODO check why +1 e non = face_number
+                        count += 1
                 else:
                     last_face_number = face_number
-                    #count += face_number
                     count = face_number
                     
 
@@ -624,7 +569,6 @@ class CameraWindow(thread.Thread):
                 now = datetime.datetime.now()
             else:
                 timeN = datetime.datetime.now()
-                #dataToJSON(timeN.strftime('%Y-%m-%d %H:%M:%S'), count, api_key)
                 self.q.put( {'time':timeN.strftime('%Y-%m-%d %H:%M:%S'), 'count':count} )
                 #azzeremento del last_face_number
                 last_face_number = None
@@ -635,7 +579,6 @@ class CameraWindow(thread.Thread):
                 print(str(count))
 
         print('end while - exiting webcam procedure')
-        #TODO clean close cv
         cv.destroyAllWindows()
         self.top.destroy()
         
@@ -681,9 +624,8 @@ class CameraWindow(thread.Thread):
 
 if __name__ == '__main__':
     ex = Queue()
-    ex.put({'exit':False})  # TODO covertire da coda ad evento
+    ex.put({'exit':False})
     sender_queue =  Queue()
-    '''
     sw = StartWindow(sender_queue) #si chiude da sola
     
     sw_return_val = sender_queue.get()
@@ -694,27 +636,14 @@ if __name__ == '__main__':
     sd = SenderData(sender_queue, api_key, ex)
     sd.daemon = True
     sd.start()
-    '''
 
     frames_queue = Queue()
-    #cw = CameraWindow(sender_queue, webcam_port, ex=ex)
-    cap = Capture(sender_queue, frames_queue, 0)
+    cap = Capture(sender_queue, frames_queue, webcam_port)
     cap.start()
 
-    cw = CameraWindowN(frames_queue, ex=ex)
+    cw = CameraWindowN(frames_queue=frames_queue, ex=ex)
     cw.run()    #code stops here as tk mainloop is started
 
     cap.runstate = False
     cw = None
-    #cw.start()
-
-    #sd.join()
-    '''
-    print("Thread morte")
-    while cw.is_alive():
-        time.sleep(0.5)  
-        print(f" sd alive: {sd.is_alive()},cw alive: {cw.is_alive()}")  
-    # NOTA: IDLE cattura tutte le eccezioni, compresa la SystemExit.
-    # Provare senza IDLE.
-    '''
-    sys.exit(0)
+    
