@@ -5,7 +5,7 @@
 
 <div class="container">
 <h3>I tuoi stand</h3>
-<table border="0" cellspacing="2" cellpadding="2" id="t1">
+<table class="contentTable" border="0" cellspacing="2" cellpadding="2" id="t1">
     <thead>
         <tr>
             <th> <font face="Arial">ID</font> </th>
@@ -32,6 +32,9 @@
                 <form action="<?php echo URL?>graph/showGraph" method="POST"> 
                     <input type="image" src="application/images/graph.png" name="submit"/>
                     <input type="hidden" name="id" value="<?php echo $stand['id']?>">
+                    <input type="hidden" name="type" value="line">
+                    <input type="hidden" name="datetime" value="default">
+                    <input type="hidden" name="refresh" value="yes">
                 </form>
             <?php }else{ ?>Dati non presenti<?php } ?></td>
             <td>
@@ -79,7 +82,7 @@
 					editable: [[1, 'nome'], [2, 'luogo'], [3, 'data_inizio'], [4, 'data_fine']]
 			},
 			hideIdentifier: true,
-            url: "application/scripts/live_edit.php",
+            url: "application/scripts/stand_edit.php",
             onDraw: function() {
                 $('table tr td:nth-child(4) input').each(function() {
                     $(this).datepicker({

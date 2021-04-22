@@ -1,8 +1,8 @@
 <body>
 <form action="<?php echo URL?>login" method="post">
     <div class="container">
-        <p><b>Login failed!</b><br><br>Check your username or password</p>
-        <button type="submit">Back</button>
+        <p><b>Login fallito!</b><br><br>Username o password errati.</p>
+        <button type="submit">Indietro</button>
     </div>
 </form>
 </body>

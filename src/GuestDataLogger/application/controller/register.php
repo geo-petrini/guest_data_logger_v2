@@ -20,7 +20,7 @@ class Register
         $username = $model->cleanInput($_POST['username']);
         $password = $_POST['password'];
         $result = $model->registerUser($username, $password);
-        if($result == TRUE){
+        if($result == TRUE && !is_string($result)){
             header('Location:'.URL.'home');
         }else if($result == "USER"){
             header('Location:'.URL.'errors/registerError/usernameError');

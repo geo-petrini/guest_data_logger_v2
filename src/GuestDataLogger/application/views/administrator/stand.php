@@ -1,6 +1,6 @@
 <div class="container">
-    <h3>Stands</h3>
-    <table border="0" cellspacing="2" cellpadding="2">
+    <h3>Modificia stand</h3>
+    <table class="contentTable" border="0" cellspacing="2" cellpadding="2">
     <thead>
             <tr>
                 <th>Nome</th> 
@@ -15,8 +15,8 @@
             <tr>
                 <td><?php if(isset($stand['nome'])) echo $stand['nome']; ?></td>
                 <td><?php if(isset($stand['luogo'])) echo $stand['luogo']; ?></td>
-                <td><?php if(isset($stand['data_inizio'])) echo $stand['data_inizio']; ?></td>
-                <td><?php if(isset($stand['data_fine'])) echo $stand['data_fine']; ?></td>
+                <td><?php if(isset($stand['data_inizio'])) echo substr($stand['data_inizio'],0,10); ?></td>
+                <td><?php if(isset($stand['data_fine'])) echo substr($stand['data_fine'],0,10); ?></td>
                 <td><?php if(isset($stand['proprietario'])) echo $stand['proprietario']; ?></td>
                 <td><?php if(isset($stand['isPublic'])) echo $stand['isPublic']; ?></td>
             </tr>

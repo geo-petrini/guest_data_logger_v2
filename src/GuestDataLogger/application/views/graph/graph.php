@@ -3,38 +3,42 @@
 <script>
     var ctx = document.getElementById('chart<?php echo $num_webcam;?>');
     var chart = new Chart(ctx, {
-    type: '<?php echo $type;?>',
-    data: {
-        labels: [
-            <?php echo $labels;?>
-        ],
-        <?php $ciclo = 0; ?>
-        <?php foreach ($datasets as $dataset): ?>
-        datasets: [
-            {
-                label: '# di persone per webcam <?php echo $num_webcam[$ciclo];?>',
-                data: [
-                    <?php echo $dataset; ?>
-                ],
-                // Generic Style
-                <?php
-                    $red = rand(0, 127);
-                    $green = rand(0, 127);
-                    $blue = rand(0, 127);
-                    $rgba = "rgba($red, $green, $blue, 255)";
-                ?>
-                borderColor: '<?php echo $rgba; ?>',
-                backgroundColor: '<?php echo $rgba; ?>',
-                borderWidth: 2,
+        type: '<?php echo $type;?>',
+        data: {
+            labels: [
+                <?php echo $labels;?>
+            ],
+            <?php foreach ($datasets as $dataset): ?>
+            datasets: [{
+                    label: '# di persone per webcam <?php echo $num_webcam;?>',
+                    data: [ <?php echo $dataset; ?> ],
 
-                // Line chart Style
-                pointBackgroundColor: '<?php echo $rgba; ?>',
-                lineTension: 0,
-            },
-        ],
-        <?php $ciclo = $ciclo + 1; ?>
-        <?php endforeach ?>
-    },
-    options: { }
-});
+                    // Generic Style
+                    borderColor: <?php echo $rgba; ?>,
+                    backgroundColor: <?php echo $bgrgba; ?>,
+                    borderWidth: 2,
+
+                    // Line chart Style
+                    pointBackgroundColor: <?php echo $rgba; ?>,
+                    lineTension: 0,
+
+                    // Pie chart Style
+                    hoverOffset: 21
+                },
+            ],
+            <?php endforeach ?>
+        },
+        options: {
+            responsive: true,
+            <?php if($type != "pie"): ?>
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+            <?php endif ?>
+        }
+    });
 </script>

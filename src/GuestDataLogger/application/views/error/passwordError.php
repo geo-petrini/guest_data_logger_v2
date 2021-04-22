@@ -1,8 +1,8 @@
 <body>
 <form action="<?php echo URL?>register" method="post">
     <div class="container">
-        <p><b>Register failed!</b><br><br>Password too long</p>
-        <button type="submit">Back</button>
+        <p><b>Registrazione fallita!</b><br><br>La password è troppo lunga.</p>
+        <button type="submit">Indietro</button>
     </div>
 </form>
 </body>

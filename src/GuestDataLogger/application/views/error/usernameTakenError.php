@@ -1,8 +1,8 @@
 <body>
 <form action="<?php echo URL?>register" method="post">
     <div class="container">
-        <p><b>Register failed!</b><br><br>Username already taken</p>
-        <button type="submit">Back</button>
+        <p><b>Registrazione fallita!</b><br><br>Il nome utente è già in uso</p>
+        <button type="submit">Indietro</button>
     </div>
 </form>
 </body>

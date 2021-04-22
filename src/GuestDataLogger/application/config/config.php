@@ -24,19 +24,19 @@ $dir = str_replace('\\','/',getcwd().'/');
 $final = $actual_link.str_replace($documentRoot,'',$dir);
 
 define('URL', $final);
-define('HOST', "localhost:3307");
+define('HOST', "efof.myd.infomaniak.com");
 
-$database = "guestdatalogger";
-$user_table = "$database.user";
+$database = "efof_gdl";
+$user_table = "$database.utente";
 $stand_table = "$database.stand";
 $key_table = "$database.chiave";
 $stat_table = "$database.stat";
 
-define('DATABASE', "guestdatalogger");
+define('DATABASE', $database);
 define('USER_TABLE', $user_table);
 define('STAND_TABLE', $stand_table);
 define('KEY_TABLE', $key_table);
 define('STAT_TABLE', $stat_table);
 
-define('USERNAME', "root");
-define('PASSWORD', "");
+define('USERNAME', "efof_gdl");
+define('PASSWORD', "ProgettoI3_GDL");
