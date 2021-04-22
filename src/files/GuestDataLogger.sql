@@ -6,8 +6,8 @@ CREATE TABLE utente(
     nome VARCHAR(25),
     cognome VARCHAR(25),
     pass VARCHAR(255) NOT NULL,
-    isOwner TINYINT(1) DEFAULT 0,
-    isAdmin TINYINT(1) DEFAULT 0
+    isOwner TINYINT(1) DEFAULT 0 NOT NULL,
+    isAdmin TINYINT(1) DEFAULT 0 NOT NULL
 );
 
 CREATE TABLE stand(
