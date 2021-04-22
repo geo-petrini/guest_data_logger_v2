@@ -24,10 +24,10 @@ CREATE TABLE stand(
 );
 
 CREATE TABLE stat(
-    data TIMESTAMP NOT NULL,
+    data TIMESTAMP,
     numero_persone INT NOT NULL,
-    stand_id INT NOT NULL,
-    num_webcam INT NOT NULL,
+    stand_id INT,
+    num_webcam INT,
     PRIMARY KEY(data, stand_id, num_webcam),
     FOREIGN KEY(stand_id) REFERENCES stand(id)
 	ON UPDATE CASCADE
