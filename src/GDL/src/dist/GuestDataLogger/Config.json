@@ -1,0 +1,7 @@
+{
+     "site_sender": "http://samtinfo.ch/gdl/scripts/insertStat.php",
+     "key_checker": "http://samtinfo.ch/gdl/scripts/checkKey.php",
+     "http": "http://10.20.4.118:8888",
+     "https": "https://10.20.4.118:8888",
+     "api_key": "64633c1c3b89d6e15e7292ad84602270"
+}
