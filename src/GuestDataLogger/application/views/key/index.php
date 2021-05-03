@@ -1,6 +1,7 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <div class="container">
 <h3>Le tue chiavi</h3>
-<table border="0" cellspacing="2" cellpadding="2" id="t1">
+<table class="contentTable" border="0" cellspacing="2" cellpadding="2" id="t1">
     <thead>
         <tr>
             <th> <font face="Arial">Nome</font> </th> 
@@ -29,3 +30,15 @@
     <?php endforeach; ?>
     </tbody>
 </table>
+<script>
+$(document).ready(function(){
+    $('table tr td:nth-child(5)').click(function() {
+        var row_num = parseInt( $(this).parent().index() )+1;
+        var copyText = $("table tr:nth-child(" + row_num +") td:nth-child(5)").html();
+        var dummy = $('<input>');
+        dummy.val(copyText).appendTo('body').select();
+        document.execCommand("copy");
+        dummy.remove();
+    });
+});
+</script>

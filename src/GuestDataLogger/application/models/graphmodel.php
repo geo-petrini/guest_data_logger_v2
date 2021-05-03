@@ -23,13 +23,39 @@
 		}
 
         function fetchStands($proprietario){
-			$query = "SELECT * FROM stand WHERE proprietario = '$proprietario' OR isPublic = 1";
+			if($proprietario == ""){
+				$query = "SELECT * FROM stand WHERE isPublic = 1";
+			}else{
+				$query = "SELECT * FROM stand WHERE proprietario = '$proprietario' OR isPublic = 1";
+			}
 			$stands = DatabaseModel::executeSelectQuery($query);
+			if(is_array($stands)){
+				$stand_ids = $this::fetchStandsWithStats($proprietario);
+				if(is_array($stand_ids)){
+					$standsWStats = array();
+					foreach($stands as $stand){
+						if(in_array($stand['id'], $stand_ids)){
+							$standWStats[] = $stand;
+						}
+					}
+					
+					if(count($standWStats) != 0){
+						return $standWStats;
+					}else{
+						return "EMPTY";
+					}
+				}
+				return $stand_ids;
+			}
 			return $stands;
 		}
 
 		function fetchStandsWithStats($proprietario){
-			$query = "SELECT DISTINCT(stand_id) FROM stat LEFT JOIN stand on stat.stand_id = stand.id WHERE stand.proprietario = '$proprietario'";
+			if($proprietario == ""){
+				$query = "SELECT DISTINCT(stand_id) FROM stat LEFT JOIN stand on stat.stand_id = stand.id WHERE isPublic = 1";
+			}else{
+				$query = "SELECT DISTINCT(stand_id) FROM stat LEFT JOIN stand on stat.stand_id = stand.id WHERE stand.proprietario = '$proprietario' OR isPublic = 1";
+			}
 			$stand_ids = DatabaseModel::executeSelectQuery($query);
             if(is_array($stand_ids)){
                 $ids = array();
@@ -69,6 +95,16 @@
 			$result = "";
 			foreach ($dataset as $data) {
 				$result = $result . $data['numero_persone'] . ", ";
+			}
+			return $result;
+		}
+
+		function fetchDatasetPie($stand_id){
+			$query = "SELECT SUM(numero_persone) FROM stat WHERE stand_id = $stand_id GROUP BY num_webcam ORDER BY num_webcam";
+			$dataset = DatabaseModel::executeSelectQuery($query);
+			$result = "";
+			foreach($dataset as $data) {
+				$result = $result . $data['SUM(numero_persone)'] . ", ";
 			}
 			return $result;
 		}

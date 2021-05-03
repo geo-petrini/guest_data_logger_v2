@@ -1,8 +1,8 @@
 <body>
 <form action="<?php echo URL?>" method="post">
     <div class="container">
-        <p><b>Database error!</b><br><br>Plase, retry later</p>
-        <button type="submit">Back</button>
+        <p><b>Errore di database!</b><br><br>Per favore, riprova più tardi.</p>
+        <button type="submit">Indietro</button>
     </div>
 </form>
 </body>

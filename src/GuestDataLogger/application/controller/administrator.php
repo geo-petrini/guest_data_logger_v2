@@ -67,7 +67,7 @@ class Administrator
             require 'application/models/administratormodel.php';
             $model = new AdministratorModel();
             $flag = $model->updateUser($_POST);
-            if($flag == TRUE){
+            if($flag == TRUE && !is_string($flag)){
                 header('Location:'.URL.'administrator/users');
             }else if($flag == "MYSQL"){
                 header('Location:'.URL.'errors/databaseError');
@@ -88,7 +88,7 @@ class Administrator
             require 'application/models/administratormodel.php';
             $model = new AdministratorModel();
             $flag = $model->deleteUser($_POST['username']);
-            if($flag == TRUE){
+            if($flag == TRUE && !is_string($flag)){
                 header('Location:'.URL.'administrator/users');
             }else if($flag == "MYSQL"){
                 header('Location:'.URL.'errors/databaseError');
@@ -153,7 +153,7 @@ class Administrator
             require 'application/models/administratormodel.php';
             $model = new AdministratorModel();
             $flag = $model->updateStand($_POST);
-            if($flag == TRUE){
+            if($flag == TRUE && !is_string($flag)){
                 header('Location:'.URL.'administrator/stands');
             }else if($flag == "MYSQL"){
                 header('Location:'.URL.'errors/databaseError');
@@ -174,7 +174,7 @@ class Administrator
             require 'application/models/administratormodel.php';
             $model = new AdministratorModel();
             $flag = $model->deleteStand($_POST['id']);
-            if($flag == TRUE){
+            if($flag == TRUE && !is_string($flag)){
                 header('Location:'.URL.'administrator/stands');
             }else if($flag == "MYSQL"){
                 header('Location:'.URL.'errors/databaseError');

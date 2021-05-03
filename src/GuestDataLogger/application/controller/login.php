@@ -20,9 +20,9 @@ class Login
         $username = $model->cleanInput($_POST['username']);
         $password = $_POST['password'];
         $result = $model->checkLogin($username, $password);
-        if($result == TRUE){
+        if($result == TRUE && !is_string($result)){
             header('Location:'.URL.'home');
-        }else if($result == FALSE){
+        }else if($result == FALSE && !is_string($result)){
             header('Location:'.URL.'errors/loginError');
         }else if($result == "MYSQL"){
             header('Location:'.URL.'errors/databaseError');

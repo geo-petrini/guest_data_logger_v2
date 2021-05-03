@@ -6,16 +6,13 @@
             </div>
         </div>
         <div id="templatemo_banner_content">
-        	<div class="header_01">ScanSpect Data Manager</div>
-            <div class="button_01"><a href="http://samtinfo.ch/i17aloale/site/">Sito Informativo</a></div>
+        	<div class="header_01">Guest Data Logger</div>
             <br>
             <br>
             <?php
                 if(isset($_SESSION['username'])){
                     echo '<div class="header_02">Benvenuto ' . $_SESSION['username'] . '</div>';
                 }
-               
-                
             ?>
         </div>	
     
@@ -28,7 +25,7 @@
     
     	<div id="column_w530">
         	
-            <div class="header_02" style="color: black;">Gestisci i tuoi dati ScanSpect da qui </div>
+            <div class="header_02" style="color: black;">Gestisci i tuoi dati GDL da qui </div>
             
             <p class="em_text">User</p>
             
@@ -57,7 +54,7 @@
                 </div>
                 
                 <div class="news_content">
-                    <div class="header_04"><a class="alist" href="https://github.com/LuMug/ScanSpect">Repository github</a></div>
+                    <div class="header_04"><a class="alist" href="https://github.com/geo-petrini/guest_data_logger_v2">Repository github</a></div>
                     <p>Visualizza la repository del nostro progetto.</p>
 				</div>
                                 
@@ -89,19 +86,6 @@
 				</div>
                                 
                 <div class="cleaner"></div>
-            </div>
-             <div class="column_w300_section_01 even_color">
-            	<div class="news_image_wrapper">
-                	<img src="application/images/xamppLogo.jpg" alt="image" />
-                </div>
-                
-                <div class="news_content">
-                    <div class="header_04"><a class="alist" href="https://www.apachefriends.org/it/index.html">XAMPP</a></div>
-                    <p>XAMPP è una buona piattaforma per avere un DBMS e PHP in un unico pacchetto, senza dover installarli in modo stand-alone.</p>
-				</div>
-                                
-                <div class="cleaner"></div>
-                 
             </div>
             <div class="cleaner"></div>
         </div>

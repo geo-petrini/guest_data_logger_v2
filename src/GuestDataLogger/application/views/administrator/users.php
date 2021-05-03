@@ -1,6 +1,6 @@
 <div class="container">
-<h3>Users</h3>
-<table border="0" cellspacing="2" cellpadding="2">
+<h3>Utenti</h3>
+<table class="contentTable" border="0" cellspacing="2" cellpadding="2">
     <thead>
         <tr>
             <th>Username</th> 

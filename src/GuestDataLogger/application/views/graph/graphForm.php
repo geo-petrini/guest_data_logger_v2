@@ -3,8 +3,8 @@
     <label for="line">A linee</label>
     <input type="radio" id="bar" name="type" value="bar" <?php if($type == 'bar') echo 'checked'?>>
     <label for="bar">A barre</label>
-    <input type="radio" id="radar" name="type" value="radar" <?php if($type == 'radar') echo 'checked'?>>
-    <label for="radar">A radar</label>
+    <input type="radio" id="pie" name="type" value="pie" <?php if($type == 'pie') echo 'checked'?>>
+    <label for="radar">A torta</label>
     <br>
     <input type="radio" id="default" name="datetime" value="default" <?php if($datetime == 'default') echo 'checked'?>>
     <label for="default">Per data e orario</label>
@@ -18,6 +18,11 @@
     <label for="hour">Per ora</label>
     <input type="radio" id="minute" name="datetime" value="MINUTE" <?php if($datetime == 'MINUTE') echo 'checked'?>>
     <label for="minute">Per minuto</label>
+    <br>
+    <input type="radio" id="ref" name="refresh" value="yes" <?php if($refresh == 'yes') echo 'checked'?>>
+    <label for="ref">Ricarica automaticamente</label>
+    <input type="radio" id="noref" name="refresh" value="no" <?php if($refresh == 'no') echo 'checked'?>>
+    <label for="noref">Non ricaricare</label>
     <br>
     <button type="submit" name="buttonGraph">Ricarica</button>
     <input type="hidden" name="id" value="<?php echo $stand_id?>">

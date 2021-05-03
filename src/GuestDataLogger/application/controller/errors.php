@@ -7,9 +7,19 @@ class Errors
     header('Location:'.URL.'home');
   }
 
+  public function sessionError(){
+    require 'application/views/error/errorHeader.php';
+    require 'application/views/error/sessionError.php';
+  }
+
   public function databaseError(){
     require 'application/views/error/errorHeader.php';
     require 'application/views/error/databaseError.php';
+  }
+
+  public function dateError(){
+    require 'application/views/error/errorHeader.php';
+    require 'application/views/error/dateError.php';
   }
 
   public function loginError(){
@@ -25,5 +35,15 @@ class Errors
   public function administratorError(){
     require 'application/views/error/errorHeader.php';
     require 'application/views/error/administratorError.php';
+  }
+
+  public function noGraphs(){
+    require 'application/views/error/errorHeader.php';
+    require 'application/views/error/noGraphs.php';
+  }
+
+  public function unexpectedError(){
+    require 'application/views/error/errorHeader.php';
+    require 'application/views/error/unexpectedError.php';
   }
 }

@@ -39,14 +39,17 @@ class Stand
         require 'application/models/standmodel.php';
         $model = new StandModel();
         $result = $model->addStand($_POST);
-        if($result == TRUE){
+        echo $result;
+        if($result == TRUE && !is_string($result)){
             if($_SESSION['owner'] == FALSE){
-                $result = $model->setOwner($_SESSION['username']);
+                $result = $model->setOwner($_SESSION['username'], true);
                 $_SESSION['owner'] = TRUE;
             }
             header('Location:'.URL.'home');
         }else if($result == "MYSQL"){
             header('Location:'.URL.'errors/databaseError');
+        }else if($result == "DATE"){
+            header('Location:'.URL.'errors/dateError');
         }else{
             header('Location:'.URL.'errors/databaseError');
         }
@@ -65,7 +68,11 @@ class Stand
         require 'application/models/standmodel.php';
         $model = new StandModel();
         $flag = $model->deleteStand($_POST['id']);
-        if($flag == TRUE){
+        if($model->checkStands($_SESSION['username'])){
+            $model->setOwner($_SESSION['username'], FALSE);
+            $_SESSION['owner'] = FALSE;
+        }
+        if($flag == TRUE && !is_string($flag)){
             header('Location:'.URL.'stand');
         }else if($flag == "MYSQL"){
             header('Location:'.URL.'errors/databaseError');
@@ -82,7 +89,7 @@ class Stand
         require 'application/models/standmodel.php';
         $model = new StandModel();
         $flag = $model->setPublic($_POST['id'], $_POST['val']);
-        if($flag == TRUE){
+        if($flag == TRUE && !is_string($flag)){
             header('Location:'.URL.'stand');
         }else if($flag == "MYSQL"){
             header('Location:'.URL.'errors/databaseError');

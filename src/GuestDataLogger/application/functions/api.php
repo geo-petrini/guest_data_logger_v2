@@ -74,5 +74,6 @@
             }
             $output .= html_entity_decode('&#' . $isRandomInRange . ';');
         }
-        return $output . round(microtime(true) * 1000);
+        $output = $output . round(microtime(true) * 1000);
+        return md5($output);
     }

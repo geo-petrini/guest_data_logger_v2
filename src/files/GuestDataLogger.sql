@@ -6,8 +6,8 @@ CREATE TABLE utente(
     nome VARCHAR(25),
     cognome VARCHAR(25),
     pass VARCHAR(255) NOT NULL,
-    isOwner TINYINT(1) DEFAULT 0,
-    isAdmin TINYINT(1) DEFAULT 0
+    isOwner TINYINT(1) DEFAULT 0 NOT NULL,
+    isAdmin TINYINT(1) DEFAULT 0 NOT NULL
 );
 
 CREATE TABLE stand(
@@ -24,11 +24,11 @@ CREATE TABLE stand(
 );
 
 CREATE TABLE stat(
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    data TIMESTAMP NOT NULL,
+    data TIMESTAMP,
     numero_persone INT NOT NULL,
-    stand_id INT NOT NULL,
-    num_webcam INT NOT NULL,
+    stand_id INT,
+    num_webcam INT,
+    PRIMARY KEY(data, stand_id, num_webcam),
     FOREIGN KEY(stand_id) REFERENCES stand(id)
 	ON UPDATE CASCADE
         ON DELETE CASCADE

@@ -32,7 +32,7 @@ class Key
         $model = new KeyModel();
         $flag = $model->insertKey($key, $_POST['id']);
         echo $flag;
-        if($flag == TRUE){
+        if($flag == TRUE && !is_string($flag)){
             header('Location:'.URL.'stand');
         }else if($flag == "MYSQL"){
             header('Location:'.URL.'errors/databaseError');
@@ -51,7 +51,7 @@ class Key
         require 'application/models/keymodel.php';
         $model = new KeyModel();
         $flag = $model->deleteKey($_POST['chiave']);
-        if($flag == TRUE){
+        if($flag == TRUE && !is_string($flag)){
             header('Location:'.URL.'key');
         }else if($flag == "MYSQL"){
             header('Location:'.URL.'errors/databaseError');

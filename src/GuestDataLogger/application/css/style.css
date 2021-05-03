@@ -63,6 +63,19 @@ body{
     white-space:nowrap;
 }
 
+#t11 {
+    border:none;
+    border-collapse: collapse;
+}
+
+#t11 td, #t11 th{
+    border-right: 1px solid #000;
+}
+
+#t11 td:last-child, #t11 th:last-child{
+    border-right: none;
+}
+
 .list .alink:hover {
     background-color: #4CAF50;
 }
@@ -99,6 +112,10 @@ button:hover {
 img.avatar {
     width: 15%;
     border-radius: 50%;
+}
+
+tr td:nth-child(5){
+    cursor: pointer;
 }
 
 .container {

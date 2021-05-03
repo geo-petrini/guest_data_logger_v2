@@ -2,10 +2,19 @@
 	include_once "databasemodel.php";
 	class LoginModel{
 
+		/**
+		 * 
+		 * Controlla i dati per il login.
+		 * 
+		 * @param string $username Il nome utente.
+		 * @param string $password La password.
+		 * @return boolean True se il login va a buon fine, altrimenti false.
+		 * 
+		 */
 		function checkLogin($username, $password) {
-			$query = "SELECT * from user WHERE username = '$username' AND pass = '$password'";
+			$query = "SELECT * from utente WHERE username = '$username'";
 			$result = DatabaseModel::executeSelectQuery($query);
-			if ($result != "MYSQL" && count($result) > 0) {
+			if ($result != "MYSQL" && password_verify($password, $result[0]['pass'])) {
 				$result = $result[0];
 
 				$_SESSION['loggedin'] = TRUE;
@@ -29,10 +38,21 @@
 			return $result;
 		}
 
+		/**
+		 * 
+		 * Registra un nuovo utente.
+		 * 
+		 * @param string $username Il nome utente.
+		 * @param string $password La password.
+		 * @return mixed boolean|string True se la registrazione va a buon fine, "PASS"
+		 * se la password è troppo lunga, o "USER" se il nome utente è troppo lungo.
+		 * 
+		 */
 		function registerUser($username, $password){
 			if(strlen($username) < 25){
 				if(strlen($password) < 32){
-					$query = "INSERT INTO user(username, pass) VALUES('$username', '$password')";
+					$hashed = password_hash($password,PASSWORD_BCRYPT);
+					$query = "INSERT INTO utente(username, pass) VALUES('$username', '$hashed')";
 					$result = DatabaseModel::executeQuery($query);
 					if ($result == TRUE) {
 						$_SESSION['loggedin'] = TRUE;
@@ -49,6 +69,14 @@
 			return $result;
 		}
 		
+		/**
+		 * 
+		 * Trasforma la stringa passata in una stringa priva di elementi che potrebbero dare problemi.
+		 * 
+		 * @param string $data La stringa da pulire.
+		 * @return string La nuova stringa.
+		 * 
+		 */
 		function cleanInput($data) {
 			$data = trim($data);
 			$data = stripslashes($data);
